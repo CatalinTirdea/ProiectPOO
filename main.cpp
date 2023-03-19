@@ -29,14 +29,21 @@ class String{
   
 };
 
+class TeamPrincipal
+{
+  String name;
+  int age;
+  double height;
+  int experience;
 
+};
 
 class DriverChampionship{
  int points;
 };
 
 class ConstructorChampionship{
-  int teampoints;
+  int teamPoints;
 };
 
 class Tires{
@@ -46,32 +53,61 @@ class Tires{
 class Races{
     String date;
     String circuiteType;
-    
+    String fastestLap;
+    Tires tire1;
+    Tires tire2;
+    Tires tire3;
+    Circuits circuit;
 
 };
 
 class Circuits
-{
+{ 
+  String name;
+  double length;
+  int numberOfCorners;
+  int numberOfDRSZones;
+  
 
 };
 
 class EngineManufacturers
 {
+  String name;
+  double HP;
+  int cc;
  
 };
 
 class Driver{
-
+ String name;
+ int age;
+ double weigth;
+ double height;
+ String nationality;
+ DriverChampionship points;
 };
 
 
 class Car
 {
-    
+    String name;
+    double length;
+    EngineManufacturers engine;
+    String color;
+
 };
 
 class Team
-{
+{ 
+  TeamPrincipal teamPrincipal;
+  Driver driver1;
+  Car    car1;
+  Driver driver2;
+  Car    car2;
+  ConstructorChampionship teamPoints;
+  String Sponsors;
+  int budget;
   
 };
 
