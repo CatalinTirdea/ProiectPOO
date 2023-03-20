@@ -40,14 +40,52 @@ class TeamPrincipal
 
 class DriverChampionship{
  int points;
+ DriverChampionship () : points(0) {}
+  
+  int getPoints (){
+    return points;
+  }
+  
+  void setPoints (int point){
+    points = point;
+  }
+  
+  void addPoints (int point){
+    points += point;
+  }
 };
 
 class ConstructorChampionship{
   int teamPoints;
+   ConstructorChampionship() : teamPoints(0) {}
+  
+  int getTeamPoints(){
+    return teamPoints;
+  }
+  
+  void setTeamPoints (int teamPoint){
+    teamPoints = teamPoint;
+  }
+  
+  void addTeamPoints (int teamPoint){
+    teamPoints += teamPoint;
+  }
+
 };
 
 class Tires{
    String compound;
+
+   Tires () : compound("C5"){}
+
+   String getCompound(){
+    return compound;
+   }
+
+   void setCompound(String comp){
+    compound = comp;
+   }
+
 };
 
 class Races{
@@ -73,7 +111,7 @@ class Circuits
 
 class EngineManufacturers
 {
-  String name;
+  String manufacturerName;
   double HP;
   int cc;
  
@@ -86,6 +124,7 @@ class Driver{
  double height;
  String nationality;
  DriverChampionship points;
+ int driverPenaltyPoints;
 };
 
 
@@ -95,11 +134,12 @@ class Car
     double length;
     EngineManufacturers engine;
     String color;
-
+    
 };
 
 class Team
 { 
+  String name;
   TeamPrincipal teamPrincipal;
   Driver driver1;
   Car    car1;
@@ -108,6 +148,7 @@ class Team
   ConstructorChampionship teamPoints;
   String Sponsors;
   int budget;
+  int teamPenaltyPoints;
   
 };
 
