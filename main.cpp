@@ -1,5 +1,5 @@
 #include <iostream>
-
+#include <string.h>
 using namespace std;
 
 
@@ -21,8 +21,9 @@ class String{
      strcpy(sir1,sir3);
   }
 
-  String::~String()
+  ~String() 
   {
+
     delete[] sir1; 
   }
 
@@ -94,6 +95,26 @@ class Tires{
   friend class Races;
 };
 
+class Circuits
+{ 
+  String name;
+  double length;
+  int numberOfCorners;
+  int numberOfDRSZones;
+ 
+  Circuits () :  length(0.0), numberOfCorners(0),numberOfDRSZones(0){}
+
+  Circuits (String nm, double lng, int nrcorners, int nrdrs){
+    name = nm;
+    length = lng;
+    numberOfCorners = nrcorners;
+    numberOfDRSZones = nrdrs;
+  }
+
+  friend class Races;
+
+};
+
 class Races{
     String date;
     String circuitType;
@@ -124,25 +145,7 @@ class Races{
  }
 };
 
-class Circuits
-{ 
-  String name;
-  double length;
-  int numberOfCorners;
-  int numberOfDRSZones;
- 
-  Circuits () :  length(0.0), numberOfCorners(0),numberOfDRSZones(0){}
 
-  Circuits (String nm, double lng, int nrcorners, int nrdrs){
-    name = nm;
-    length = lng;
-    numberOfCorners = nrcorners;
-    numberOfDRSZones = nrdrs;
-  }
-
-  friend class Races;
-
-};
 
 class EngineManufacturers
 {
@@ -226,7 +229,7 @@ class Team
   int teamPenaltyPoints;
 
   Team () : budget(140000000), teamPenaltyPoints(0){}
-  
+
   Team(String nm, TeamPrincipal tp, Driver d1, Car c1, Driver d2,Car c2, ConstructorChampionship teamp, String spns,long int bdg, int tmpnltypnts){
     name = nm;
     teamPrincipal = tp;
