@@ -37,3 +37,16 @@ Clasele implementate:
 
 
 Functionalitati:
+
+-Poti initializa puncte atat in Constructor Championship cat si in Driver Championship folosint cin>> dar si setTeamPoints;
+
+-Poti afisa stringurile folosind cout<<;
+
+-Poti sa atribui valoare unui obiect din clasaDriver Championship la altul
+
+-Poti afisa obiectul din Driver Championship si Constructor Championship
+
+- Poti sa atribui valoare unui obiect din clasa String la altul
+
+
+*In a doua parte a proiectului voi face toate functionalitatile pentru clase si meniul interactiv

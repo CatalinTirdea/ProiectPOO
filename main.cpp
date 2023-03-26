@@ -27,8 +27,18 @@ class String{
     delete[] sir1; 
   }
 
-  
+  void operator = (const String& sir){
+   sir1 = sir.sir1;
+}
+   friend ostream & operator << (ostream &out, const String &strin);
+
 };
+
+ostream & operator << (ostream &out, const String &strin)
+{
+   out<<strin.sir1;
+    return out;
+}
 
 class TeamPrincipal
 {
@@ -39,8 +49,15 @@ class TeamPrincipal
 
 };
 
+
+
+
 class DriverChampionship{
+ 
  int points;
+ 
+ public:
+ 
  DriverChampionship () : points(0) {}
   
   int getPoints (){
@@ -54,12 +71,38 @@ class DriverChampionship{
   void addPoints (int point){
     points += point;
   }
+  void operator = (const DriverChampionship& dc)
+  {
+    points = dc.points;
+  }
+  friend ostream & operator << (ostream &out, const DriverChampionship &dc);
+  friend istream & operator >> (istream &in,   DriverChampionship &dc);
   friend class Driver;
 };
 
+
+ostream & operator << (ostream &out, const DriverChampionship &dc)
+{
+   out<<"Current Driver Chapmionship points are: "<<dc.points;
+    return out;
+}
+
+
+istream & operator >> (istream &in, DriverChampionship &dc)
+{   
+      in>>dc.points;
+    
+    return in;
+}
+
+
+
 class ConstructorChampionship{
   int teamPoints;
-   ConstructorChampionship() : teamPoints(0) {}
+  
+  public:
+  
+  ConstructorChampionship() : teamPoints(0) {}
   
   int getTeamPoints(){
     return teamPoints;
@@ -72,8 +115,29 @@ class ConstructorChampionship{
   void addTeamPoints (int teamPoint){
     teamPoints += teamPoint;
   }
+
+  
   friend class Team;
+  
+  friend ostream & operator << (ostream &out, const ConstructorChampionship &cc);
+  
+  friend istream & operator >> (istream &in,   ConstructorChampionship &cc);
 };
+
+ostream & operator << (ostream &out, const ConstructorChampionship &cc)
+{
+   out<<"Current Constructor Chapmionship points are: "<<cc.teamPoints;
+    return out;
+}
+
+istream & operator >> (istream &in, ConstructorChampionship &cc)
+{   
+      in>>cc.teamPoints;
+    
+    return in;
+}
+
+
 
 class Tires{
    String compound;
@@ -131,7 +195,6 @@ class Races{
        circuit = circ;
 
    
-   
 }
 
  Races (Tires t1,Tires t2,Tires t3){
@@ -140,9 +203,14 @@ class Races{
   tire3 = t3;
  }
 
- Races(String fl){
-  fastestLap = fl;
- }
+  void setFastestLap(String fl){
+    fastestLap = fl;
+  } 
+
+ String getDate(){
+    return date;
+   }
+   
 };
 
 
@@ -211,9 +279,12 @@ class Car
     Car(EngineManufacturers eng){
       engine = eng;
     }
-
+  
     friend class Team;
 };
+
+
+
 
 class Team
 { 
@@ -224,10 +295,12 @@ class Team
   Driver driver2;
   Car    car2;
   ConstructorChampionship teamPoints;
-  String Sponsors;
+  String sponsors;
   long int budget;
   int teamPenaltyPoints;
 
+
+  public:
   Team () : budget(140000000), teamPenaltyPoints(0){}
 
   Team(String nm, TeamPrincipal tp, Driver d1, Car c1, Driver d2,Car c2, ConstructorChampionship teamp, String spns,long int bdg, int tmpnltypnts){
@@ -238,7 +311,7 @@ class Team
     driver2 = d2;
     car2 = c2;
     teamPoints = teamp;
-    Sponsors = spns;
+    sponsors = spns;
     budget = bdg;
     teamPenaltyPoints = tmpnltypnts;
 
@@ -256,14 +329,51 @@ class Team
     teamPrincipal = tp;
   }
   Team(String spns){
-    Sponsors = spns;
+    sponsors = spns;
   }
+
+  void addPenaltyPoints(int pnltypnts){
+    teamPenaltyPoints += pnltypnts;
+
+  }
+
+  void determineBudget(){
+    int i;
+    int penalty = 0;
+    int penaltyPerPoint = 100000000;
+    budget = 140000000;
+    if(teamPenaltyPoints >= 15)
+  {
+    penalty = teamPenaltyPoints/15;
+    penaltyPerPoint *= penalty;
+  }
+    
+    budget -= penaltyPerPoint;
+    }
+  
+
 };
 
+
+ 
 int main()
 {
-
-
-
+ConstructorChampionship points1;
+ ConstructorChampionship points2;
+ DriverChampionship points3;
+ cin>>points1;
+ cout<<points1<<endl;
+ cin>>points3;
+ cout<<points3<<endl;
+ String sir("abc");
+ String sir2;
+ sir2 = sir;
+ cout<<sir2<<endl;
+ points2 = points1;
+ cout<<points2<<endl;
+ points1.setTeamPoints(100);
+ cout<<points1<<endl;
+ points2.getTeamPoints();
+ 
     return 0;
 }
