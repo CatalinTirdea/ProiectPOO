@@ -1,56 +1,26 @@
 #include <iostream>
 #include <string.h>
+#include <vector>
+
 using namespace std;
 
+class customExceptionNegative : public exception{
+ const char* negative = "Number cannot be nagative!";
+ public:
+  const char * what(){
 
-class String{
-  
-  char *sir1;
-  
+   return negative;
+ }
+
+};
+class customExceptionAge : public exception{
+  const char* age = "The age should be over 18!";
+
   public:
-  String () {
-     sir1 = NULL;
+   const char * what(){
+    return age;
   }
-    
-  
-  String (const char sir3[])
-  {  
-     int lungime =  strlen(sir3);
-     sir1 = new char[lungime + 1];
-    // strcopy
-     strcpy(sir1,sir3);
-  }
-
-  ~String() 
-  {
-
-    delete[] sir1; 
-  }
-
-  void operator = (const String& sir){
-   sir1 = sir.sir1;
-}
-   friend ostream & operator << (ostream &out, const String &strin);
-
 };
-
-ostream & operator << (ostream &out, const String &strin)
-{
-   out<<strin.sir1;
-    return out;
-}
-
-class TeamPrincipal
-{
-  String name;
-  int age;
-  double height;
-  int experience;
-
-};
-
-
-
 
 class DriverChampionship{
  
@@ -65,10 +35,23 @@ class DriverChampionship{
   }
   
   DriverChampionship(int point){
+    try{
+    if(point < 0)
+    throw customExceptionNegative();
     points = point;
+    }
+    catch(customExceptionNegative cen){
+      cout<<cen.what()<<endl;
+      cout<<"Points cannot be negative, setting them to 0. ";
+      points = 0;
+
+    }
+    
   }
   
   void addPoints (int point){
+    if (point < 0)
+    throw customExceptionNegative();
     points += point;
   }
   void operator = (const DriverChampionship& dc)
@@ -77,7 +60,6 @@ class DriverChampionship{
   }
   friend ostream & operator << (ostream &out, const DriverChampionship &dc);
   friend istream & operator >> (istream &in,   DriverChampionship &dc);
-  friend class Driver;
 };
 
 
@@ -98,26 +80,32 @@ istream & operator >> (istream &in, DriverChampionship &dc)
 
 
 class ConstructorChampionship{
+  protected:
   int teamPoints;
-  
-  public:
-  
-  ConstructorChampionship() : teamPoints(0) {}
-  
+  int penaltyPoints;
   int getTeamPoints(){
     return teamPoints;
   }
+  public:
+  
+  ConstructorChampionship() : teamPoints(0),penaltyPoints(0) {}
+  
+   
   
   void setTeamPoints (int teamPoint){
+    if (teamPoint < 0)
+    throw customExceptionNegative();
     teamPoints = teamPoint;
   }
   
   void addTeamPoints (int teamPoint){
+    if (teamPoint < 0)
+    throw customExceptionNegative();
     teamPoints += teamPoint;
   }
 
   
-  friend class Team;
+ 
   
   friend ostream & operator << (ostream &out, const ConstructorChampionship &cc);
   
@@ -140,59 +128,105 @@ istream & operator >> (istream &in, ConstructorChampionship &cc)
 
 
 class Tires{
-   String compound;
+   string compound;
+  public:
 
    Tires () : compound("C5"){}
 
-   String getCompound(){
+   string getCompound(){
     return compound;
    }
 
-   void setCompound(String comp){
+   void setCompound(string comp){
     compound = comp;
    }
 
-   Tires(String comp) {
-    compound= comp;
+   Tires(string comp) {
+    compound = comp;
    }
-
-  friend class Races;
+   friend ostream & operator << (ostream &out, const Tires &tire);
+  
+    friend istream & operator >> (istream &in,   Tires &tire);
+  
 };
+
+   ostream & operator << (ostream &out, const Tires &tire){
+   out<<tire.compound;
+    return out;
+}
+
+istream & operator >> (istream &in,   Tires &tire)
+{   
+      cout<<"Enter compound: ";
+      in>>tire.compound;
+    return in;
+}
 
 class Circuits
 { 
-  String name;
+  string name;
   double length;
   int numberOfCorners;
   int numberOfDRSZones;
- 
+  public:
   Circuits () :  length(0.0), numberOfCorners(0),numberOfDRSZones(0){}
 
-  Circuits (String nm, double lng, int nrcorners, int nrdrs){
+  Circuits (string nm, double lng, int nrcorners, int nrdrs){
     name = nm;
     length = lng;
     numberOfCorners = nrcorners;
     numberOfDRSZones = nrdrs;
   }
-
-  friend class Races;
-
+  
+   bool checkIfEmpty(){
+    if(numberOfCorners == 0){
+      return true;
+    }
+    return false;
+   }
+    string getName(){
+    return name;
+   }
+   double getLength(){
+    return length;
+   }
+    int getnumberOfCorners(){
+    return numberOfCorners;
+   }
+    int getnumberOfDRSZones(){
+    return numberOfDRSZones;
+   }
+   void setName(string nm){
+    name = nm;
+   }
+    void setLength(double ln){
+    length = ln;
+   }
+    void setnumberOfCorners(int cn){
+    numberOfCorners = cn;
+   }
+    void setnumberOfDRSZones(int dz){
+    numberOfDRSZones = dz;
+   }
 };
 
-class Races{
-    String date;
-    String circuitType;
-    String fastestLap;
+
+
+class Races: public Circuits{
+    string date;
+    string circuitType;
+    string fastestLap;
     Tires tire1;
     Tires tire2;
     Tires tire3;
-    Circuits circuit;
-    
-  Races (String dateRace,String circType,Circuits circ) {
+   
+  public: 
+  Races (): date(" "), circuitType(" "), fastestLap(" "){}
+
+  Races (string dateRace,string circType) {
    
        date = dateRace;
        circuitType = circType;
-       circuit = circ;
 
    
 }
@@ -203,52 +237,128 @@ class Races{
   tire3 = t3;
  }
 
-  void setFastestLap(String fl){
+  void setFastestLap(string fl){
     fastestLap = fl;
   } 
 
- String getDate(){
+ string getDate(){
     return date;
    }
+    friend ostream & operator << (ostream &out,  Races &race);
+  
+    friend istream & operator >> (istream &in,   Races &race);
    
 };
+
+ostream & operator << (ostream &out,  Races &race)
+{   out<<"The "<<race.getName()<<" circuit with a length of "<<race.getLength()<<"km has a number of "<<race.getnumberOfDRSZones()<<" DRS zones and "<<race.getnumberOfCorners()<<" corners";
+    out<<". The date of the race is "<<race.date<<". The circuit type is "<<race.circuitType<<". The selected compounds are: "<<race.tire1<<", "<<race.tire2<<", "<<race.tire3<<".";
+    if(race.fastestLap !="0"){
+      out<<" The fastest lap set this season was: "<<race.fastestLap;
+    }
+    return out;
+}
+
+
+istream & operator >> (istream &in, Races &race)
+{   
+    cout<<"Date of the race: ";
+    in>>race.date; 
+    cout<<endl;
+    cout<<"What was the fastest lap?(0 if the race didn't occur): ";
+    in>>race.fastestLap;
+    cout<<endl;
+    cout<<"Enter the first chosen compound: ";
+    in>>race.tire1;
+    cout<<endl;
+    cout<<"Enter the second chosen compound: ";
+    in>>race.tire2;
+    cout<<endl;
+    cout<<"Enter the third chosen compound: ";
+    in>>race.tire3;
+    cout<<endl;
+    cout<<"Enter circuit type: ";
+    in>>race.circuitType;
+    if(race.checkIfEmpty() == true){
+      cout<<"Circuit name: ";
+      string setname;
+      double setlength;
+      int setnrdrs;
+      int setnrcorners;
+      in>>setname;
+      race.setName(setname);
+      cout<<endl;
+      cout<<"Circuit length(In kilometers): ";
+      in>>setlength;
+      race.setLength(setlength);
+      cout<<endl;
+      cout<<"Number of DRS Zones: ";
+      in>>setnrdrs;
+      race.setnumberOfDRSZones(setnrdrs);
+      cout<<endl;
+      cout<<"Number of Corners: ";
+      in>>setnrcorners;
+      race.setnumberOfCorners(setnrcorners);
+    }
+
+    return in;
+ }
 
 
 
 class EngineManufacturers
 {
-  String manufacturerName;
+  string manufacturerName;
   double HP;
   int cc;
+  public:
   EngineManufacturers () : HP(0.0), cc(0){}
 
-  EngineManufacturers (String mnfname, double hp, int cylcap){
+  EngineManufacturers (string mnfname, double hp, int cylcap){
     manufacturerName = mnfname;
     HP = hp;
     cc = cylcap;
   }
-  friend class Car;
+  
 };
 
 class Driver{
- String name;
+ string name;
  int age;
  double weigth;
  double height;
- String nationality;
+ string nationality;
  DriverChampionship points;
  int driverPenaltyPoints;
- 
+ public:
  Driver() : age(0),weigth(0.0),height(0.0), driverPenaltyPoints(0){}
  
- Driver(String nm, int ag,double wei,double hei,String nat){
+ Driver(string nm, int ag,double wei,double hei,string nat){
   name = nm;
   age = ag;
   weigth = wei;
   hei = height;
   nationality = nat;
  }
-  
+  void setDriverAge(int ag){
+   try{
+    if (ag < 18)
+    throw customExceptionAge();
+    else
+    age = ag;
+   }
+   catch(customExceptionAge cea){
+    if(ag < 0)
+    {throw customExceptionNegative();}
+    else{
+    cout<<cea.what();
+    }
+  } 
+  catch(customExceptionNegative cen){
+    cout<<cen.what();
+    
+  }
+  }
   Driver(DriverChampionship pnts){
     points = pnts;
   }
@@ -256,84 +366,225 @@ class Driver{
   Driver(int pnltypoints){
     driverPenaltyPoints = pnltypoints;
   }
-  friend class Team;
+ friend class Team;
+
+
+};
+
+class interfataCar{
+ public:
+ virtual bool checkLength(double length){
+  if(length == 4.4){
+    return true;
+  }
+  return false;
+ }
+ ~interfataCar(){
+  cout<<"destructed"<<" ";
+ }
+ virtual bool checkCarName(string nm){
+  if(nm !=" "){
+    return true;
+  }
+  return false;
+ }
 };
 
 
-class Car
-{
-    String name;
+class Car: public interfataCar {
+    string name;
     double length;
     EngineManufacturers engine;
-    String color;
-    
+    string color;
+    public:
     Car() :  length(0.0){}
 
-    Car(String nm, double lngth, EngineManufacturers eng, String clr){
+    Car(string nm, double lngth, EngineManufacturers eng, string clr){
+      if (checkCarName(nm) == true)
       name = nm;
+      
       length = lngth;
       engine = eng;
       color = clr;
     } 
+    Car(double ln){
+      length = ln;
+    }
 
     Car(EngineManufacturers eng){
       engine = eng;
     }
+    bool checkLength()
+    {
+      if (length == 5.3){
+        return true;
+      }
+      return false;
+    }
+    bool checkCarName(string nm){
+      if (nm != ""){
+        return true;
+      }
+      return false;
+
+    }
   
-    friend class Team;
+  
 };
 
 
 
 
-class Team
+class TeamPrincipal
+{
+  string name;
+ 
+  protected:
+   int age;
+   double experience;
+   TeamPrincipal (string nm, int ag,double exp){
+    name = nm;
+    experience = exp;
+    age = ag;
+  }
+  
+  public:
+  TeamPrincipal() :name(" "),age(0),experience(0.0){}
+ 
+  void setName(string nm){
+    name = nm;
+  }
+  void setAge(int ag){
+    age = ag;
+  }
+  void setExperience(double exp){
+   experience = exp;
+  }
+  string getName(){
+    return name;
+  }
+  int getAge(){
+    return age;
+  }
+  double getExperience(){
+    return experience;
+  }
+};
+
+class interfaceSponsors
+{
+  public:
+  virtual bool checkIfOk(string spns)
+  {
+    if(spns != " ")
+    return true;
+    return false;
+  }
+  virtual bool checkSize(int sz){
+    if (sz !=0)
+    return true;
+    return false;
+  }
+
+
+
+  ~interfaceSponsors(){
+    cout<<"destructed"<<" ";
+  }
+  
+   
+};
+
+
+class Sponsors: public interfaceSponsors{
+ vector<string> sponsors;
+ 
+ public:
+   bool checkIfOk(string spns)
+  {
+    if(spns != "")
+    return true;
+    return false;
+  }
+   virtual void addSponsors(string spns){
+    if (checkIfOk(spns) == true)
+    sponsors.push_back(spns);
+   }
+   
+   void printSponsors(){
+    for(int i  = 0 ;i < sponsors.size();i++){
+      if (i != sponsors.size()-1)
+      cout<<sponsors[i]<<", ";
+      else cout<<sponsors[i];
+    }
+    cout<<endl;
+   }
+   bool checkSize(){
+   if(sponsors.size() != 0)
+    return true;
+   return false;
+   }
+  void showSize(){
+  
+   cout<<sponsors.size();
+  }
+  
+};
+
+
+class Team: public TeamPrincipal, public ConstructorChampionship,public Sponsors
 { 
-  String name;
-  TeamPrincipal teamPrincipal;
+  string name;
   Driver driver1;
   Car    car1;
   Driver driver2;
   Car    car2;
-  ConstructorChampionship teamPoints;
-  String sponsors;
   long int budget;
-  int teamPenaltyPoints;
+
 
 
   public:
-  Team () : budget(140000000), teamPenaltyPoints(0){}
+  Team () : budget(140000000){}
 
-  Team(String nm, TeamPrincipal tp, Driver d1, Car c1, Driver d2,Car c2, ConstructorChampionship teamp, String spns,long int bdg, int tmpnltypnts){
+  Team(string nm, Driver d1, Car c1, Driver d2,Car c2,  string spns,long int bdg, int tmpnltypnts){
     name = nm;
-    teamPrincipal = tp;
     driver1 = d1;
     car1 = c1;
     driver2 = d2;
     car2 = c2;
-    teamPoints = teamp;
-    sponsors = spns;
+    addSponsors(spns);
     budget = bdg;
-    teamPenaltyPoints = tmpnltypnts;
+    penaltyPoints = tmpnltypnts;
+    
+    
 
+  }
+  Team(string nam,int ag,int exp):TeamPrincipal(nam,ag,exp){
+    
+    
   }
 
   Team(Driver d2, Car c2)
   {
+   if(driver1.age != 0){
    driver1 = driver2;
    car1 = car2;
    driver2 =d2;
    car2 =c2;
+   }
+   else{
+    driver1 = d2;
+    car1 = c2;
+   }
      }
   
-  Team(TeamPrincipal tp){
-    teamPrincipal = tp;
-  }
-  Team(String spns){
-    sponsors = spns;
+
+  Team(string spns){
+    addSponsors(spns);
   }
 
   void addPenaltyPoints(int pnltypnts){
-    teamPenaltyPoints += pnltypnts;
+    penaltyPoints += pnltypnts;
 
   }
 
@@ -342,38 +593,50 @@ class Team
     int penalty = 0;
     int penaltyPerPoint = 100000000;
     budget = 140000000;
-    if(teamPenaltyPoints >= 15)
+    if(penaltyPoints >= 15)
   {
-    penalty = teamPenaltyPoints/15;
+    penalty = penaltyPoints/15;
     penaltyPerPoint *= penalty;
   }
     
     budget -= penaltyPerPoint;
     }
-  
 
+   int getPoints(){
+    return getTeamPoints();
+   }
+   
+  friend class Driver;
 };
 
 
  
 int main()
-{
-ConstructorChampionship points1;
- ConstructorChampionship points2;
- DriverChampionship points3;
- cin>>points1;
- cout<<points1<<endl;
- cin>>points3;
- cout<<points3<<endl;
- String sir("abc");
- String sir2;
- sir2 = sir;
- cout<<sir2<<endl;
- points2 = points1;
- cout<<points2<<endl;
- points1.setTeamPoints(100);
- cout<<points1<<endl;
- points2.getTeamPoints();
- 
+{ 
+
+  // Races race;
+  // cin>>race;
+  // cout<<race;
+  // Team mercedes("Mihai",12,1);
+  // mercedes.addSponsors("Pirelli");
+  // mercedes.addSponsors("TeamViewer");
+  // cout<<endl;
+  // cout<<mercedes.getName()<<" "<<mercedes.getAge()<<" "<<mercedes.getExperience();
+  // cout<<endl<<mercedes.getPoints();
+  // cout<<endl;
+  // mercedes.printSponsors();
+  // cout<<endl;
+  // Sponsors* spns = new Sponsors;
+  // spns->addSponsors("asd");
+  // spns->addSponsors("");
+  // spns->printSponsors();
+  // Car ferrari(5.3);
+  // cout<<ferrari.checkLength();
+  // cout<<endl;
+  // interfataCar* interfata;
+  // Car* haas = dynamic_cast<Car*>(interfata);
+  Driver hamilton;
+  hamilton.setDriverAge(-2);
+  // DriverChampionship dc(-2);
     return 0;
 }
